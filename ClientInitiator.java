@@ -30,7 +30,7 @@ import javax.swing.JOptionPane;
  */
 public class ClientInitiator {
 
-    Socket socket = null;
+    Socket socket = null; //asdasdasd
 
     public static void main(String[] args){
         String ip = JOptionPane.showInputDialog("Please enter server IP");
@@ -77,7 +77,7 @@ public class ClientInitiator {
     private void drawGUI() {
         JFrame frame = new JFrame("Remote Admin");
         JButton button= new JButton("Terminate");
-        
+
         frame.setBounds(100,100,150,150);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(button);
