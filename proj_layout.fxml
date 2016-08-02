@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="458.0" prefWidth="963.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Main">
+   <children>
+      <MenuBar fx:id="mnb" prefHeight="25.0" prefWidth="938.0">
+         <menus>
+            <Menu fx:id="mnFile" mnemonicParsing="false" text="File">
+               <items>
+               <MenuItem fx:id="mniConn" mnemonicParsing="false" onAction="#mniConnClick" text="Connect" /> 
+                  <MenuItem fx:id="mniExp" mnemonicParsing="false" onAction="#mniExpClick" text="Export Chat" />
+                  <MenuItem fx:id="mniClose" mnemonicParsing="false" onAction="#mniCloseClick" text="Close" />
+               </items>
+            </Menu>
+            <Menu fx:id="mnTools" mnemonicParsing="false" text="Tools">
+               <items>
+                  <MenuItem fx:id="mniSett" mnemonicParsing="false" onAction="#mniSettClick" text="Settings" />
+               </items>
+            </Menu>
+            <Menu fx:id="mnHelp" mnemonicParsing="false" text="Help">
+               <items>
+                  <MenuItem fx:id="mniAbout" mnemonicParsing="false" onAction="#mniAboutClick" text="About" />
+               </items>
+            </Menu>
+         </menus>
+      </MenuBar>
+      <Pane layoutY="25.0" prefHeight="25.0" prefWidth="938.0">
+         <children>
+            <Label layoutX="87.0" layoutY="4.0" text="Log" />
+            <RadioButton fx:id="rbServer" layoutX="333.0" layoutY="4.0" mnemonicParsing="false" onAction="#rbServerClick" text="Server">
+               <toggleGroup>
+                  <ToggleGroup fx:id="group" />
+               </toggleGroup></RadioButton>
+            <RadioButton fx:id="rbClient" layoutX="444.0" layoutY="4.0" mnemonicParsing="false" onAction="#rbClientClick" text="Client" toggleGroup="$group" />
+            <Button fx:id="btStart2" layoutX="741.0" mnemonicParsing="false" onAction="#btStart2Click" text="Start" />
+            <Button fx:id="btStop2" layoutX="793.0" mnemonicParsing="false" onAction="#btStop2Click" text="Stop" />
+         </children>
+      </Pane>
+      <BorderPane layoutY="50.0" prefHeight="404.0" prefWidth="938.0">
+         <center>
+            <Pane fx:id="paneView" prefHeight="436.0" prefWidth="738.0" BorderPane.alignment="CENTER" />
+         </center>
+         <left>
+            <Pane fx:id="paneChat" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+         </left>
+      </BorderPane>
+   </children>
+</Pane>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane prefHeight="129.0" prefWidth="249.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Server">
+   <children>
+      <TextField fx:id="tfPort" layoutX="86.0" layoutY="14.0" prefHeight="25.0" prefWidth="51.0" />
+      <PasswordField fx:id="tfPw" layoutX="86.0" layoutY="52.0" />
+      <Button fx:id="btnStart" layoutX="194.0" layoutY="92.0" mnemonicParsing="false" onAction="#btnStartClick" text="Start" />
+      <Button fx:id="btnCancel" layoutX="134.0" layoutY="92.0" mnemonicParsing="false" onAction="#btnCancelClick" text="Cancel" />
+      <Label layoutX="14.0" layoutY="18.0" text="Port" textAlignment="CENTER" />
+      <Label layoutX="14.0" layoutY="56.0" text="Password" textAlignment="CENTER" />
+   </children>
+</Pane>
