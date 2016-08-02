@@ -1,6 +1,6 @@
 package application;
 
-import java.awt.TextField;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -11,10 +11,15 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.ResourceBundle;
+
+import javax.net.ssl.HostnameVerifier;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -22,28 +27,30 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class Client implements ActionListener {
+	static Thread t1;
+	static Socket echoSocket;
+	@FXML
+	private ResourceBundle resources;
 
 	@FXML
-	static ResourceBundle resources;
+	private URL location;
 
 	@FXML
-	static URL location;
+	public TextField tfIp1 = new TextField();
 
 	@FXML
-	static TextField tfIp1;
+	public TextField tfPort1= new TextField();
 
 	@FXML
-	static TextField tfPort1;
+	private PasswordField tfPw1= new PasswordField(); ;
 
 	@FXML
-	static PasswordField tfPw1;
-
-	@FXML
-	static Button btnStart1;
+	private Button btnStart1 = new Button();
 
 	@FXML
 	static Button btnCancel1;
-
+	static String hostName="";
+	static int portNumber=0;
 	public static void start() throws Exception
 	{
 		FXMLLoader f = new FXMLLoader(); 
@@ -53,35 +60,76 @@ public class Client implements ActionListener {
 		st.setTitle("Connect to Server");
 		st.show();
 
+
 	} 
 	@FXML
 	public void btnCancel1Click() {
 
 	}
 
+
 	@FXML
 	public void btnStart1Click() {
-		//start connection 
-		String hostName = tfIp1.getText();
-		int portNumber = Integer.parseInt(tfPort1.getText());
 
-				try {
-					Socket echoSocket = new Socket(hostName, portNumber);
-					PrintWriter out =new PrintWriter(echoSocket.getOutputStream(), true);
-					BufferedReader in =new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
-					BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
-					
-					String userInput;
-					while ((userInput = stdIn.readLine()) != null)
+		hostName = tfIp1.getText();
+		portNumber = Integer.parseInt(tfPort1.getText());
+
+
+		try {
+			echoSocket = new Socket(hostName, portNumber);
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if(echoSocket.isConnected()==true)
+		{					
+			System.out.println("CONNECT");
+			t1 = new Thread(new Runnable() {
+
+				@Override
+				public void run() {
+					while(true)
 					{
-					    out.println(userInput);
-					    System.out.println("echo: " + in.readLine());
+						PrintWriter out;
+						try {
+							out = new PrintWriter(echoSocket.getOutputStream(), true);
+							BufferedReader in =new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
+							BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
+
+							String userInput;
+							while ((userInput = stdIn.readLine()) != null)
+							{
+								out.println(userInput);
+								in.readLine();
+								System.out.println("echo: " + in.readLine());
+							}
+
+							t1.sleep(1000);
+						}catch(Exception io)
+						{
+							System.out.println("asasas");		
+						}
 					}
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
 				}
+				});
+			t1.start();
+
+			}
+			else
+			{
+				System.out.println("Não ligou");
+			}
+		
+
+
 	}
+
+
+
+
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {

@@ -72,10 +72,10 @@ public class Main extends Application implements ActionListener
 	static Button btStop2;
 
 	@FXML
-	static Pane paneView;
+	public Pane paneView = new Pane();
 
 	@FXML
-	static Pane paneChat;
+	public Pane paneChat = new Pane();
 
 
 	public static void main(String[] arguments)

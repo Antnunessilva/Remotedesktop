@@ -1,6 +1,6 @@
 package application;
 
-import java.awt.TextField;
+import javafx.scene.control.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -24,25 +24,26 @@ import javafx.stage.Stage;
 
 public class Server implements ActionListener{
 	
-	static String inputLine, outputLine;
+	public String inputLine, outputLine;
     @FXML
-    static ResourceBundle resources;
+    public ResourceBundle resources;
 
     @FXML
-    static URL location;
+    public URL location;
 
     @FXML
-    static TextField tfPort;
+    public TextField tfPort = new TextField();
 
     @FXML
-    static PasswordField tfPw;
+    public PasswordField tfPw;
 
     @FXML
-    static Button btnStart;
+    public Button btnStart = new Button();
 
     @FXML
-    static Button btnCancel;
+    public Button btnCancel;
     static Socket clientSocket;
+    static int portNumber;
 	public static void start() throws Exception
 	   {
 	     FXMLLoader f = new FXMLLoader(); 
@@ -60,7 +61,18 @@ public class Server implements ActionListener{
 
 	    @FXML
 	    void btnStartClick() {
-	    	
+	    	portNumber = Integer.parseInt(tfPort.getText());
+
+	    	try {
+	    	    ServerSocket serverSocket = new ServerSocket(portNumber);
+	    	    Socket clientSocket = serverSocket.accept();
+	    	    PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+	    	    BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+	    	    System.out.println(serverSocket.getLocalSocketAddress());
+	    	    System.out.println(serverSocket.isBound());
+	    	}catch (Exception e) {
+				// TODO: handle exception
+			}
 
 	    }   
     
