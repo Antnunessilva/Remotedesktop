@@ -1,4 +1,6 @@
 package application;
+
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -18,6 +20,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -31,7 +35,6 @@ public class Main extends Application implements ActionListener
 	@FXML
 	static URL location;
 
-	@SuppressWarnings("restriction")
 	@FXML
 	static MenuBar mnb;
 
@@ -76,6 +79,16 @@ public class Main extends Application implements ActionListener
 
 	@FXML
 	public Pane paneChat = new Pane();
+	
+	@FXML
+	public TextArea tachat = new TextArea();
+
+    @FXML
+    public TextField taTextfield = new TextField();
+
+    @FXML
+    public Button tasend = new Button();
+
 
 
 	public static void main(String[] arguments)
@@ -91,6 +104,7 @@ public class Main extends Application implements ActionListener
 		final Parent fxmlRoot = (Parent)f.load(new FileInputStream(new File("proj_layout.fxml")));
 		stage.setScene(new Scene(fxmlRoot));
 		stage.show();
+
 
 	} //wow tive de declarar todos os metodos LOL 
 
@@ -116,6 +130,16 @@ public class Main extends Application implements ActionListener
 		}
 		
 	}
+	  @FXML
+	  public void taSendClick() {
+		String line = taTextfield.getText();
+		tachat.appendText("Message: " +taTextfield.getText()+"\n");
+		
+		taTextfield.setText("");
+		
+		//adicionar metodo que envia mensagens através do socket
+	    }
+	  
 	public void btStop2Click()
 	{
 
@@ -128,7 +152,7 @@ public class Main extends Application implements ActionListener
 	}
 	public void mniCloseClick()
 	{
-Platform.exit();
+			Platform.exit();
 	}
 	public void mniConnClick()
 	{
@@ -140,6 +164,7 @@ Platform.exit();
 	}
 	public void mniSettClick()
 	{
+
 
 	}
 	public void rbClientClick()

@@ -4,6 +4,8 @@ package application;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -26,9 +28,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class Client implements ActionListener {
+public class Client extends Main implements ActionListener {
 	static Thread t1;
-	static Socket echoSocket;
+	public Socket socket;
+	public DataInputStream  console;
+	public DataOutputStream streamOut;
 	@FXML
 	private ResourceBundle resources;
 
@@ -69,64 +73,47 @@ public class Client implements ActionListener {
 
 
 	@FXML
-	public void btnStart1Click() {
+	public void btnStart1Click() throws NumberFormatException, UnknownHostException, IOException {
+	Thread t2 = new Thread(new Runnable() {
+		public void run() {
 
-		hostName = tfIp1.getText();
-		portNumber = Integer.parseInt(tfPort1.getText());
+			 try
+		        {  socket = new Socket(tfIp1.getText(), Integer.parseInt(tfPort1.getText()));
 
-
-		try {
-			echoSocket = new Socket(hostName, portNumber);
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		           start1();
+		           tachat.appendText(socket.toString());
+		        }
+		        catch(UnknownHostException uhe)
+		        {  System.out.println("Host unknown: " + uhe.getMessage());
+		        }
+		        catch(IOException ioe)
+		        {  System.out.println("Unexpected exception: " + ioe.getMessage());
+		        }
+		       
+		        
 		}
-		if(echoSocket.isConnected()==true)
-		{					
-			System.out.println("CONNECT");
-			t1 = new Thread(new Runnable() {
-
-				@Override
-				public void run() {
-					while(true)
-					{
-						PrintWriter out;
-						try {
-							out = new PrintWriter(echoSocket.getOutputStream(), true);
-							BufferedReader in =new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
-							BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
-
-							String userInput;
-							while ((userInput = stdIn.readLine()) != null)
-							{
-								out.println(userInput);
-								in.readLine();
-								System.out.println("echo: " + in.readLine());
-							}
-
-							t1.sleep(1000);
-						}catch(Exception io)
-						{
-							System.out.println("asasas");		
-						}
-					}
-				}
-				});
-			t1.start();
-
-			}
-			else
-			{
-				System.out.println("Não ligou");
-			}
+	});
+	t2.start();
 		
-
-
 	}
+       
+	
 
+	
+	public void start1() throws IOException
+	   {  console   = new DataInputStream(System.in);
+	      streamOut = new DataOutputStream(socket.getOutputStream());
+	   }
+	   public void stop()
+	   {  try
+	      {  if (console   != null)  console.close();
+	         if (streamOut != null)  streamOut.close();
+	         if (socket    != null)  socket.close();
+	      }
+	      catch(IOException ioe)
+	      {  System.out.println("Error closing ...");
+	      }
+	   }
 
 
 
