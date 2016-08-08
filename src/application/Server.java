@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -15,6 +16,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.Scanner;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -26,11 +28,10 @@ import javafx.stage.Stage;
 import application.Main;
 
 public class Server extends Main implements ActionListener{
-	static Thread t1;
-	public Socket socket;
-	public ServerSocket server;
-	public DataInputStream streamIn;
-	public String inputLine, outputLine;
+	static Thread t2;
+	static Socket s;
+	static ServerSocket ss;
+	static String msgin;
 	@FXML
 	public ResourceBundle resources;
 
@@ -67,57 +68,39 @@ public class Server extends Main implements ActionListener{
 
 	@FXML
 	void btnStartClick() throws IOException {
-		t1 = new Thread(new Runnable() {
-			
-			@Override
+		
+		
+		t2 = new Thread(new Runnable() {
 			public void run() {
-				// TODO Auto-generated method stub
-			
-				try{
-					server = new ServerSocket(Integer.parseInt(tfPort.getText()));
-					tachat.appendText(server.toString());
-			
-					socket = server.accept();
-				
-				System.out.println(socket);
-
-				
-					open();
-				
-				boolean done = false;
-			
-					while (streamIn.readLine() != null)
-					{ 
-					
-					 String line;
-			
-						line = streamIn.readUTF();
-						tachat.appendText(line);
-
-					}
-				
+				try {
+					ss = new ServerSocket(Integer.parseInt(tfPort.getText()));
+				} catch (NumberFormatException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
-				catch(Exception io)
+				while(true)
 				{
-					io.printStackTrace();
+				try {
+					s = ss.accept();
+					DataInputStream din = new DataInputStream(s.getInputStream());
+					System.out.println(s);
+					msgin = din.readUTF();
+					System.out.println(msgin + " MSG DO SERVER");
+					tachat.appendText(msgin+"\n");
+					t2.sleep(1000);
+				} catch (InterruptedException | IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				}
 			}
 		});
-		t1.start();
-
-	}   
-
-	public void open() throws IOException
-	{  
-		streamIn = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+		t2.start();
 	}
-
-	public void close() throws IOException
-	{  if (socket != null)    
-		socket.close();
-	if (streamIn != null)
-		streamIn.close();
-	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub

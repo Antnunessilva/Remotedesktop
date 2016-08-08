@@ -3,10 +3,19 @@ package application;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ResourceBundle;
+import java.util.Scanner;
 
 import com.sun.glass.ui.Menu;
 import com.sun.glass.ui.MenuBar;
@@ -29,6 +38,9 @@ import javafx.stage.Stage;
 
 public class Main extends Application implements ActionListener
 {
+	public Socket s;
+	public ServerSocket ss;
+	public DataInputStream din;
 	static String bt="";
 	static ResourceBundle resources;
 
@@ -39,7 +51,7 @@ public class Main extends Application implements ActionListener
 	static MenuBar mnb;
 
 	@FXML
-	static Menu mnFile;
+	static Menu mnFile;  
 
 	@FXML
 	static MenuItem mniConn;
@@ -106,7 +118,7 @@ public class Main extends Application implements ActionListener
 		stage.show();
 
 
-	} //wow tive de declarar todos os metodos LOL 
+	} 
 
 	public void btStart2Click()
 	{
@@ -131,20 +143,37 @@ public class Main extends Application implements ActionListener
 		
 	}
 	  @FXML
-	  public void taSendClick() {
-		String line = taTextfield.getText();
-		tachat.appendText("Message: " +taTextfield.getText()+"\n");
-		
-		taTextfield.setText("");
-		
-		//adicionar metodo que envia mensagens através do socket
+	  public void taSendClick() throws IOException {
+	
+		 
+			if(bt.equals("Client"))
+			{
+			DataOutputStream dout = new DataOutputStream(application.Client.s.getOutputStream());
+			String msgout = taTextfield.getText();
+			dout.writeUTF(msgout);
+			taTextfield.setText("");
+			tachat.appendText(msgout+"\n");
+			}
+			else
+			{
+				DataOutputStream dout = new DataOutputStream(application.Server.s.getOutputStream());
+				String msgout = taTextfield.getText();
+				dout.writeUTF(msgout);
+				taTextfield.setText("");
+				tachat.appendText(msgout+"\n");
+				
+			}
+			
+			
+			
+			
 	    }
 	  
 	public void btStop2Click()
 	{
 
 	}
-	
+
 
 	public void mniAboutClick()
 	{

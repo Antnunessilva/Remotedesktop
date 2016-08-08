@@ -3,18 +3,23 @@ package application;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.DataBufferDouble;
 import java.io.BufferedReader;
+import java.io.DataInput;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ResourceBundle;
+import java.util.Scanner;
 
 import javax.net.ssl.HostnameVerifier;
 
@@ -30,9 +35,8 @@ import javafx.stage.Stage;
 
 public class Client extends Main implements ActionListener {
 	static Thread t1;
-	public Socket socket;
-	public DataInputStream  console;
-	public DataOutputStream streamOut;
+	static Socket s;
+	static String msgin="", msgout="";
 	@FXML
 	private ResourceBundle resources;
 
@@ -73,51 +77,46 @@ public class Client extends Main implements ActionListener {
 
 
 	@FXML
-	public void btnStart1Click() throws NumberFormatException, UnknownHostException, IOException {
-	Thread t2 = new Thread(new Runnable() {
-		public void run() {
-
-			 try
-		        {  socket = new Socket(tfIp1.getText(), Integer.parseInt(tfPort1.getText()));
-
-		           start1();
-		           tachat.appendText(socket.toString());
-		        }
-		        catch(UnknownHostException uhe)
-		        {  System.out.println("Host unknown: " + uhe.getMessage());
-		        }
-		        catch(IOException ioe)
-		        {  System.out.println("Unexpected exception: " + ioe.getMessage());
-		        }
-		       
-		        
-		}
-	});
-	t2.start();
+	public void btnStart1Click() throws Exception {
+		
+		
+	
+		
+		t1 = new Thread(new Runnable() {
+			public void run() {
+				try {
+					s = new Socket(tfIp1.getText(), Integer.parseInt(tfPort1.getText()));
+				} catch (NumberFormatException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				while(true)
+				{
+				try {
+					
+					DataInputStream din = new DataInputStream(s.getInputStream());
+					msgin = din.readUTF();
+					System.out.println(msgin + " MENSAGEM ENTRADA CLIENT");
+					tachat.appendText(msgin+"\n");
+					t1.sleep(1000);
+				} catch (InterruptedException | IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				}
+			}
+		});
+		t1.start();
 		
 	}
-       
 	
-
 	
-	public void start1() throws IOException
-	   {  console   = new DataInputStream(System.in);
-	      streamOut = new DataOutputStream(socket.getOutputStream());
-	   }
-	   public void stop()
-	   {  try
-	      {  if (console   != null)  console.close();
-	         if (streamOut != null)  streamOut.close();
-	         if (socket    != null)  socket.close();
-	      }
-	      catch(IOException ioe)
-	      {  System.out.println("Error closing ...");
-	      }
-	   }
-
-
-
-
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO Auto-generated method stub
